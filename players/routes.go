@@ -15,7 +15,8 @@ func CreatePlayer(c *gin.Context) {
 }
 
 func ListPlayers(c *gin.Context) {
-    c.JSON(200, gin.H{"message": "List of players!"})
+    players := []interface{}{"Player 1", "Player 2"}
+    c.JSON(200, players)
 }
 
 func GetPlayer(c *gin.Context) {
