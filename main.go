@@ -1,10 +1,7 @@
 package main
 
 import (
-    // "fmt"
-
     "github.com/gin-gonic/gin"
-    // "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/sqlite"
 
     "github.com/resinderate/ping-pong-backend/common"
@@ -13,16 +10,20 @@ import (
 )
 
 func main() {
-    db := common.InitDB()
-
-    // Batch into migrate step.
-    // Perhaps let the apps manage their own migrations.
-    db.AutoMigrate(&players.PlayerModel{})
-    db.AutoMigrate(&matches.MatchModel{})
+    common.InitDB()
+    players.AutoMigrate()
+    matches.AutoMigrate()
 
 	routes := gin.Default()
-    routes.GET("/", func(c *gin.Context) {
-        c.JSON(200, gin.H{"message": "Hello World"})
-    })
+    AddRoutes(routes)
+
     routes.Run()
+}
+
+func AddRoutes(routes *gin.Engine) {
+    playersGroup := routes.Group("/players")
+    players.RegisterRoutes(playersGroup)
+
+    matchesGroup := routes.Group("/matches")
+    matches.RegisterRoutes(matchesGroup)
 }
